@@ -93,11 +93,17 @@ async function send(text){
   history.push({role:"user", content:text});
   const bubble = addEl("msg tutor", "Thinking…");
   try {
-    const r = await fetch("/api/chat", {
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({messages: history})
-    });
+    const ctl = new AbortController();
+    const timer = setTimeout(() => ctl.abort(), 50000);
+    let r;
+    try {
+      r = await fetch("/api/chat", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({messages: history}),
+        signal: ctl.signal
+      });
+    } finally { clearTimeout(timer); }
     if (r.status === 429) throw "slow";
     if (!r.ok) throw "fail";
     const data = await r.json();
