@@ -74,6 +74,7 @@ module.exports = async (req, res) => {
     });
   };
   let lastStatus = 0;
+  const errors = []; // debug info, shown in the browser Network tab
 
   for (const model of MODELS) {
     try {
@@ -84,18 +85,19 @@ module.exports = async (req, res) => {
       const data = await r.json().catch(() => ({}));
       if (!r.ok) {
         lastStatus = r.status;
+        errors.push(model + " -> " + r.status + ": " + ((data.error && data.error.message) || "").slice(0, 200));
         console.error("Gemini error", model, r.status, JSON.stringify(data).slice(0, 500));
-        if (r.status === 404 || r.status === 429 || r.status === 503 || r.status === 400) continue; // try next model
-        return res.status(502).json({ error: "upstream" });
+        continue; // any failure: try the next model
       }
       const parts = (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) || [];
       const text = parts.filter(p => p.text && !p.thought).map(p => p.text).join("").trim();
-      if (!text) { console.error("Empty reply from", model, JSON.stringify(data).slice(0, 500)); continue; }
+      if (!text) { errors.push(model + " -> empty reply"); console.error("Empty reply from", model, JSON.stringify(data).slice(0, 500)); continue; }
       return res.status(200).json({ reply: clean(text) });
     } catch (e) {
+      errors.push(model + " -> fetch failed: " + String(e).slice(0, 150));
       console.error("Fetch failed", model, e);
     }
   }
   if (lastStatus === 429) return res.status(429).json({ error: "slow_down" });
-  return res.status(502).json({ error: "upstream" });
+  return res.status(502).json({ error: "upstream", detail: errors });
 };
