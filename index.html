@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Tuthor: Your Grade 7 Math Tutor</title>
+<title>Mathgic AI: Your Grade 7 Math Tutor</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎯</text></svg>">
 <style>
 :root{
@@ -46,22 +46,22 @@ textarea:focus{outline:2px solid var(--brand);outline-offset:1px}
 <body>
 <div class="app">
   <header>
-    <div class="logo">T</div>
+    <div class="logo">M</div>
     <div>
-      <h1>Tuthor</h1>
+      <h1>Mathgic AI</h1>
       <p class="tag">Your 7th-grade math tutor · Matematika / Математика</p>
     </div>
   </header>
   <div id="chat" aria-live="polite"></div>
   <div class="chips" id="chips"></div>
   <form class="composer" id="form" onsubmit="return false">
-    <textarea id="input" rows="1" placeholder="Type your math problem or question…" aria-label="Message Tuthor" maxlength="1200"></textarea>
+    <textarea id="input" rows="1" placeholder="Type your math problem or question…" aria-label="Message Mathgic AI" maxlength="1200"></textarea>
     <button id="send" type="button">Send</button>
   </form>
-  <div class="note">Tuthor guides you step by step. It never gives the final answer. Please don’t share personal details.</div>
+  <div class="note">Mathgic AI guides you step by step. It never gives the final answer. Please don’t share personal details.</div>
 </div>
 <script>
-const GREETING = "Hi, I’m Tuthor! 🎯 I love helping with 7th-grade math. Tell me a problem you’re working on, or pick a topic below, and we’ll figure it out together, one step at a time. What are we tackling today?";
+const GREETING = "Hi, I’m Mathgic AI! 🎯 I love helping with 7th-grade math. Tell me a problem you’re working on, or pick a topic below, and we’ll figure it out together, one step at a time. What are we tackling today?";
 const STARTERS = [
   ["Percents 💯", "I need help with a percent problem."],
   ["Ratios", "I need help with ratios and proportions."],
@@ -106,7 +106,7 @@ async function send(text){
     history.push({role:"assistant", content:data.reply});
   } catch(e){
     bubble.remove(); history.pop();
-    addEl("err", e === "slow" ? "Tuthor needs a short break. Try again in a minute." : "Something went wrong. Please try again.");
+    addEl("err", e === "slow" ? "Mathgic AI needs a short break. Try again in a minute." : "Something went wrong. Please try again.");
   } finally {
     busy = false; sendBtn.disabled = false; input.focus();
   }
